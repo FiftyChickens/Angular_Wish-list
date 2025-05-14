@@ -6,7 +6,7 @@
     @for (item of wishes; track item.wishText; let ii = $index) {
     <li>
       <div class="form-check">
-        <label class="form-check-label">
+        <label class="form-check-label" [ngClass]="getItemClasses(item)">
           <input
             class="checkbox"
             type="checkbox"

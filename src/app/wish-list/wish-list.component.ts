@@ -4,14 +4,20 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'wish-list',
-  imports: [CommonModule],
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './wish-list.component.html',
   styleUrl: './wish-list.component.css',
 })
 export class WishListComponent {
   @Input() wishes: WishItem[] = [];
   @Output() toggle = new EventEmitter<WishItem>();
+
+  getItemClasses(item: WishItem) {
+    // return item.isComplete ? ['strikeout', 'text-muted'] : [];
+
+    return { 'strikeout text-muted': item.isComplete };
+  }
 
   toggleItem(item: WishItem) {
     this.toggle.emit(item);
