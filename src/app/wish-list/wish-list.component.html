@@ -3,15 +3,16 @@
   <p class="no-items">There are no wishes to display</p>
   } @else {
   <ul class="wish-list">
-    @for (item of wishes; track item.wishText; let ii = $index) {
-    <li class="d-flex justify-content-between">
+    <li
+      *ngFor="let item of wishes; trackBy: trackByWish"
+      class="d-flex justify-content-between"
+    >
       <div class="form-check">
         <label class="form-check-label" [ngClass]="getItemClasses(item)">
           <input
             class="checkbox"
             type="checkbox"
             [checked]="item.isComplete"
-            [attr.data-index]="ii"
             (change)="toggleItem(item)"
           />
           {{ item.wishText }}
@@ -25,7 +26,6 @@
         ></button>
       </div>
     </li>
-    }
   </ul>
   }
 </div>

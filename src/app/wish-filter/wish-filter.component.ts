@@ -1,13 +1,8 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
-import { WishItem } from '../../shared/models/wishItem';
+import { WishItem } from '../../shared/models/wish-item.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-export enum Filter {
-  All = 0,
-  Unfulfilled = 1,
-  Fulfilled = 2,
-}
+import { Filter } from '../../shared/enums/filter.enum';
 
 @Component({
   selector: 'wish-filter',

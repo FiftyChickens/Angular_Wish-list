@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { WishItem } from '../../shared/models/wishItem';
+import { WishItem } from '../../shared/models/wish-item.model';
 import { CommonModule } from '@angular/common';
 import { WishService } from '../../shared/models/services/wish.service';
 
@@ -26,5 +26,8 @@ export class WishListComponent {
 
   toggleItem(item: WishItem) {
     this.toggle.emit(item);
+  }
+  trackByWish(index: number, item: WishItem): string {
+    return item.wishText;
   }
 }

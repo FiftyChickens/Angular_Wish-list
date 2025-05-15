@@ -1,14 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WishItem } from '../shared/models/wishItem';
+import { WishItem } from '../shared/models/wish-item.model';
 import { FormsModule } from '@angular/forms';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { AddWishFormComponent } from './add-wish-form/add-wish-form.component';
-import {
-  Filter,
-  WishFilterComponent,
-} from './wish-filter/wish-filter.component';
+import { WishFilterComponent } from './wish-filter/wish-filter.component';
 import { WishService } from '../shared/models/services/wish.service';
 import { Subscription } from 'rxjs';
+import { Filter } from '../shared/enums/filter.enum';
 
 @Component({
   selector: 'app-root',
@@ -26,16 +24,16 @@ export class AppComponent implements OnInit, OnDestroy {
   filter: Filter = Filter.All;
   private sub = new Subscription();
 
-  constructor(private WishService: WishService) {}
+  constructor(private wishService: WishService) {}
 
   ngOnInit() {
-    if (this.WishService.currentWishes.length === 0) {
+    if (this.wishService.currentWishes.length === 0) {
       this.addWish('To Learn Angular');
       this.addWish('Get Coffee', true);
       this.addWish('Find grass that cuts itself');
     }
 
-    this.sub = this.WishService.wishes$.subscribe();
+    this.sub = this.wishService.wishes$.subscribe();
   }
 
   ngOnDestroy() {
@@ -43,29 +41,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addWish(text: string, isComplete = false) {
-    this.WishService.addWish(text, isComplete);
+    this.wishService.addWish(text, isComplete);
   }
 
   removeWish(wish: WishItem) {
-    this.WishService.removeWish(wish);
+    this.wishService.removeWish(wish);
   }
 
   get visibleItems(): WishItem[] {
-    return this.WishService.currentWishes.filter(this.getCurrentFilter());
-  }
-
-  private getCurrentFilter() {
-    return [
-      (item: WishItem) => item,
-      (item: WishItem) => !item.isComplete,
-      (item: WishItem) => item.isComplete,
-    ][this.filter];
+    return this.wishService.getFilteredWishes(this.filter);
   }
 
   handleToggleItem(item: WishItem) {
-    item.isComplete = !item.isComplete;
-    this.WishService.removeWish(item);
-    this.WishService.addWish(item.wishText, item.isComplete);
+    this.wishService.toggleWish(item);
   }
 
   handleFilterChange(filterValue: Filter) {
