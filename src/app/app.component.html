@@ -1,6 +1,6 @@
 <div class="container">
   <!-- Wish input form -->
-  <add-wish-form (addWish)="handleAddWish($event)"></add-wish-form>
+  <add-wish-form (addWish)="addWish($event)"></add-wish-form>
 
   <!-- Filter dropdown -->
   <div class="row mt-3">
@@ -12,9 +12,11 @@
 
   <!-- Wish list display -->
   <div class="row mt-3">
-    <wish-list
-      [wishes]="visibleItems"
-      (toggle)="handleToggleItem($event)"
-    ></wish-list>
+    <div class="col-sm-5">
+      <wish-list
+        [wishes]="visibleItems"
+        (toggle)="handleToggleItem($event)"
+      ></wish-list>
+    </div>
   </div>
 </div>

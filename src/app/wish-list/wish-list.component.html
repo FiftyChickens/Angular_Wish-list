@@ -4,7 +4,7 @@
   } @else {
   <ul class="wish-list">
     @for (item of wishes; track item.wishText; let ii = $index) {
-    <li>
+    <li class="d-flex justify-content-between">
       <div class="form-check">
         <label class="form-check-label" [ngClass]="getItemClasses(item)">
           <input
@@ -12,10 +12,17 @@
             type="checkbox"
             [checked]="item.isComplete"
             [attr.data-index]="ii"
-            (click)="toggleItem(item)"
+            (change)="toggleItem(item)"
           />
           {{ item.wishText }}
         </label>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="removeWish(item)"
+        ></button>
       </div>
     </li>
     }

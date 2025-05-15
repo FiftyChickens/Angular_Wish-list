@@ -1,6 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { WishItem } from '../../shared/models/wishItem';
 import { CommonModule } from '@angular/common';
+import { WishService } from '../../shared/models/services/wish.service';
 
 @Component({
   selector: 'wish-list',
@@ -13,10 +14,14 @@ export class WishListComponent {
   @Input() wishes: WishItem[] = [];
   @Output() toggle = new EventEmitter<WishItem>();
 
-  getItemClasses(item: WishItem) {
-    // return item.isComplete ? ['strikeout', 'text-muted'] : [];
+  constructor(private WishService: WishService) {}
 
+  getItemClasses(item: WishItem) {
     return { 'strikeout text-muted': item.isComplete };
+  }
+
+  removeWish(wish: WishItem) {
+    this.WishService.removeWish(wish);
   }
 
   toggleItem(item: WishItem) {

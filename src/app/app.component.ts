@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WishItem } from '../shared/models/wishItem';
 import { FormsModule } from '@angular/forms';
 import { WishListComponent } from './wish-list/wish-list.component';
@@ -7,6 +7,8 @@ import {
   Filter,
   WishFilterComponent,
 } from './wish-filter/wish-filter.component';
+import { WishService } from '../shared/models/services/wish.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -20,15 +22,36 @@ import {
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  items: WishItem[] = [
-    new WishItem('To Learn Angular'),
-    new WishItem('Get Coffee', true),
-    new WishItem('Find grass that cuts itself'),
-  ];
+export class AppComponent implements OnInit, OnDestroy {
+  filter: Filter = Filter.All;
+  private sub = new Subscription();
+
+  constructor(private WishService: WishService) {}
+
+  ngOnInit() {
+    if (this.WishService.currentWishes.length === 0) {
+      this.addWish('To Learn Angular');
+      this.addWish('Get Coffee', true);
+      this.addWish('Find grass that cuts itself');
+    }
+
+    this.sub = this.WishService.wishes$.subscribe();
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  addWish(text: string, isComplete = false) {
+    this.WishService.addWish(text, isComplete);
+  }
+
+  removeWish(wish: WishItem) {
+    this.WishService.removeWish(wish);
+  }
 
   get visibleItems(): WishItem[] {
-    return this.items.filter(this.getCurrentFilter());
+    return this.WishService.currentWishes.filter(this.getCurrentFilter());
   }
 
   private getCurrentFilter() {
@@ -39,19 +62,13 @@ export class AppComponent {
     ][this.filter];
   }
 
-  filter: Filter = Filter.All;
-
-  handleAddWish(wishText: string) {
-    this.items.push(new WishItem(wishText));
-  }
-
   handleToggleItem(item: WishItem) {
     item.isComplete = !item.isComplete;
+    this.WishService.removeWish(item);
+    this.WishService.addWish(item.wishText, item.isComplete);
   }
 
-  handleFilterChange(filterValue: number) {
+  handleFilterChange(filterValue: Filter) {
     this.filter = filterValue;
   }
 }
-
-// https://youtu.be/JWhRMyyF7nc?t=4401
